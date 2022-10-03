@@ -1,5 +1,5 @@
 # build: docker build -t uberi/stable-diffusion .
-# run: docker run -p 7860:7860 uberi/stable-diffusion
+# run: docker run --rm -p 7860:7860 uberi/stable-diffusion
 
 FROM ubuntu:22.04
 
@@ -11,7 +11,7 @@ RUN useradd -m dev
 USER dev
 WORKDIR /home/dev
 
-RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && git reset --hard 53a3dc601fb734ce433505b1ca68770919106bad
+RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && cd stable-diffusion-webui && git reset --hard 53a3dc601fb734ce433505b1ca68770919106bad
 WORKDIR /home/dev/stable-diffusion-webui
 
 # these models get loaded at runtime when first used - download them now ahead of time so that we have them available

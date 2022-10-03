@@ -7,7 +7,7 @@ Unlike other docker images out there, this one includes all necessary dependenci
 
 Quickstart:
 
-1. Run `docker build -t uberi/stable-diffusion . && docker run -p 7860:7860 uberi/stable-diffusion`.
+1. Run `docker build -t uberi/stable-diffusion . && docker run --rm -p 7860:7860 uberi/stable-diffusion`.
 2. The web UI should now be accessible at http://localhost:7860.
 
 Features:
