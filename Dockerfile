@@ -20,6 +20,8 @@ WORKDIR /home/dev/stable-diffusion-webui
 RUN mkdir --parents models/Codeformer models/GFPGAN models/Stable-diffusion
 RUN wget -O models/Codeformer/codeformer-v0.1.0.pth 'https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/codeformer.pth'
 RUN wget -O models/GFPGAN/GFPGANv1.4.pth 'https://github.com/TencentARC/GFPGAN/releases/download/v1.3.4/GFPGANv1.4.pth'
+RUN wget -O models/GFPGAN/detection_Resnet50_Final.pth 'https://github.com/xinntao/facexlib/releases/download/v0.1.0/detection_Resnet50_Final.pth'
+RUN wget -O models/GFPGAN/parsing_parsenet.pth 'https://github.com/xinntao/facexlib/releases/download/v0.2.2/parsing_parsenet.pth'
 RUN wget -O models/Stable-diffusion/sd-v1-4.ckpt 'https://drive.yerf.org/wl/?id=EBfTrmcCCUAGaQBXVIj5lJmEhjoP1tgl&mode=grid&download=1'
 
 # install special CPU-oriented versions of torch and torchvision - much smaller because they don't include GPU support
@@ -35,7 +37,10 @@ RUN pip3 install opencv-python-headless==4.6.0.66
 # initialize CLIP since it downloads lots of files from the internet when first used
 RUN python3 -c 'from transformers import CLIPTokenizer, CLIPTextModel; version="openai/clip-vit-large-patch14"; CLIPTokenizer.from_pretrained(version); CLIPTextModel.from_pretrained(version)'
 
+# initialize Codeformers since it downloads lots of files from the internet when first used (mainly used for "Fix faces" option)
+RUN cd repositories/CodeFormer && python3 scripts/download_pretrained_models.py facelib
+
 EXPOSE 7860
 
 # start the web UI listening on 0.0.0.0:7860, disable half-size floats since we're running on CPUs that generally won't support those
-CMD python3 webui.py --listen --no-half --precision full
+CMD [ "bash", "-c", "python3 webui.py --listen --port 7860 --no-half --precision full" ]
